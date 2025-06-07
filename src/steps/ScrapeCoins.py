@@ -29,7 +29,6 @@ class ScrapeCoins:
         coins_list = []
         for i in range(len(trs)):
             tds = trs[i].contents
-            print(i)
             name = tds[2]
             price = tds[3]
             hr_1 = tds[4]
