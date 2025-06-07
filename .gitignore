@@ -1,3 +1,4 @@
 .idea
-.venv
-.CsvFiles
+venv
+CsvFiles
+venv_done.txt
