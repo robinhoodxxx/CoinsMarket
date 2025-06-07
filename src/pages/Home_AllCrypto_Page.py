@@ -44,7 +44,7 @@ class Home_AllCrypto_Page(commonActions,metaclass=ThreadSafeSingletonMeta):
         element = driver.find_element(By.XPATH, self.last_page)
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
 
-    def gradual_scroll_down(self,driver, scroll_pause=0.5,scroll_step=300, max_scrolls=50):
+    def gradual_scroll_down(self,driver, scroll_pause=0.2,scroll_step=1000, max_scrolls=50):
         """
         Gradually scroll down the page by small steps, to trigger lazy loading.
 

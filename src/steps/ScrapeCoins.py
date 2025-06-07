@@ -1,56 +1,31 @@
-
-from bs4 import  BeautifulSoup
+from bs4 import BeautifulSoup
 from src.pages.Home_AllCrypto_Page import Home_AllCrypto_Page
 from src.utils.CsvImp import CsvWriter
 
 
 class ScrapeCoins:
-    default :str ="na"
+    default: str = "na"
     page = Home_AllCrypto_Page()
 
-
-
-    def ScrappingAllCoins_step(self,driver):
+    def ScrappingAllCoins_step(self, driver,fileName:str) -> None:
         self.page.gradual_scroll_down(driver)
         self.page.scroll_to_element(driver)
         l = self.page.getLastPageIndex(driver)
         print(f'{l}->pages')
         self.page.wait_for_full_table(driver)
         html = driver.page_source
-        self.Scraper(html)
+        coins = self.Scraper(html)
+        CsvWriter(fileName, coins)
 
 
-    def Scraper(self, html) -> None:
+    def Scraper(self, html) -> list[dict[str, str]]:
         doc = BeautifulSoup(html, "html.parser")
         body = doc.find('tbody')
         trs = body.contents
         print(len(trs))
-        coins = ScrapeCoins.ScrapeFirstTen(self, trs)
+        return ScrapeCoins.Scrape_all_coins(self, trs)
 
-        CsvWriter("crypto", coins)
-
-    def ScrapeRemaingcoins(self, trs) -> list[dict]:
-        remaing_coins = []
-        for i in range(10, len(trs)):
-            tds = trs[i].contents
-
-            name = tds[2].a.find_all("p")
-            price = tds[3]
-            coin_name = name[1].text
-            coin_symbol = name[2].text
-            coin_price = price.span.text
-
-            coin = {
-                "Name": coin_name,
-                "Symbol": coin_symbol,
-                "Price": coin_price
-            }
-            remaing_coins.append(coin)
-            # print(coin)
-
-        return remaing_coins
-
-    def ScrapeFirstTen(self,trs) :
+    def Scrape_all_coins(self, trs) -> list[dict[str, str]]:
         coins_list = []
         for i in range(len(trs)):
             tds = trs[i].contents
