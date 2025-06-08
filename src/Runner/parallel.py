@@ -1,5 +1,6 @@
 import concurrent.futures
 import math
+import sys
 import time
 from datetime import datetime
 from queue import Queue
@@ -9,7 +10,8 @@ from selenium.webdriver.chrome.options import Options
 from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
 from src.utils.CsvImp import CsvWriter
 
-TOTAL_PAGES = 10
+TOTAL_PAGES = int(sys.argv[1]) if len(sys.argv) > 1 else 10  # default scrape pages are 10
+
 CHUNK_SIZE = 5
 THREADS = math.ceil(TOTAL_PAGES / CHUNK_SIZE)
 
