@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
 
     now = datetime.now()
-    formatted = now.strftime("%y-%m-%d-%H-%M-%S")
+    formatted = now.strftime("%y%m%d-%H%M%S")
     options = Options()
     options.add_argument("--headless")  # run headless for performance
     options.add_argument("--no-sandbox")
@@ -40,7 +40,7 @@ if __name__ == '__main__':
             driver.get(url)
             coins_list.extend(s.ScrappingAllCoins_step(driver))
 
-        CsvWriter(f'{formatted}-{TOTAL_PAGES}', coins_list)
+        CsvWriter(f'{formatted}_{TOTAL_PAGES}', coins_list)
 
 
     finally:

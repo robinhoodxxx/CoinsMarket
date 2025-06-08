@@ -85,9 +85,9 @@ if __name__ == "__main__":
     start_time = time.time()
     print(f"Scrapping total pages :{TOTAL_PAGES}")
     now = datetime.now()
-    formatted = now.strftime("%y-%m-%d-%H-%M-%S")
-    data = run_parallel_scraping()
-    CsvWriter(f'parallel-{formatted}-{TOTAL_PAGES}',data)
+    formatted = now.strftime("%y%m%d-%H%M%S")
+    coins_list = run_parallel_scraping()
+    CsvWriter(f'parallel_{formatted}_{TOTAL_PAGES}',coins_list)
     end_time = time.time()
     total_time = end_time - start_time
     print(f"Total execution time: {total_time:.2f} seconds")
