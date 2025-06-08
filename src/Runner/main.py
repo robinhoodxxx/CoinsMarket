@@ -11,15 +11,12 @@ TOTAL_PAGES = int(sys.argv[1]) if len(sys.argv) > 1 else 10  # default scrape pa
 
 if __name__ == '__main__':
 
-
-
-    if not 1 < TOTAL_PAGES < 98:
+    if not 1 <= TOTAL_PAGES <= 98:
         sys.exit(f"TOTAL_PAGES must be between 1 and 98. You provided: {TOTAL_PAGES}")  # Or raise an error
 
     start_time = time.time()
 
     print(f"Scrapping total pages :{TOTAL_PAGES}")
-
 
     now = datetime.now()
     formatted = now.strftime("%y%m%d-%H%M%S")
@@ -28,7 +25,7 @@ if __name__ == '__main__':
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(options=options)
     print("launched headless chrome browser")
     driver.maximize_window()
 
