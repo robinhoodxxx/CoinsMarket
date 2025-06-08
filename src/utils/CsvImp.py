@@ -1,3 +1,5 @@
+import sys
+
 import pandas as pd
 import os
 
@@ -18,3 +20,18 @@ def FileExists(file):
     if os.path.exists(file) and os.path.isfile(file):
         os.remove(file)
         print("file overwritten")
+
+
+def get_page_range():
+    """
+    Determines FIRST_PAGE and LAST_PAGE from command-line arguments.
+    - No args: returns (1, 10)
+    - One arg: returns (1, int(arg1))
+    - Two args: returns (int(arg1), int(arg2))
+    """
+    if len(sys.argv) == 1:
+        return 1, 10
+    elif len(sys.argv) == 2:
+        return 1, int(sys.argv[1])
+    else:
+        return int(sys.argv[1]), int(sys.argv[2])

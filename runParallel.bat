@@ -1,7 +1,17 @@
 @echo off
 SETLOCAL
-SET TOTAL_PAGES=%1
-IF "%TOTAL_PAGES%"=="" SET TOTAL_PAGES=10
+
+REM Handle input arguments
+IF "%~1"=="" (
+    SET FIRST_PAGE=1
+    SET LAST_PAGE=10
+) ELSE IF "%~2"=="" (
+    SET FIRST_PAGE=1
+    SET LAST_PAGE=%1
+) ELSE (
+    SET FIRST_PAGE=%1
+    SET LAST_PAGE=%2
+)
 
 REM Check if dependencies were installed
 IF NOT EXIST "venv_done.txt" (
@@ -14,7 +24,7 @@ IF NOT EXIST "venv_done.txt" (
     echo done > venv_done.txt
 )
 
-echo Running main script with TOTAL_PAGES=%TOTAL_PAGES% ...
-python -m src.Runner.parallel %TOTAL_PAGES%
+echo Running main script with FIRST_PAGE=%FIRST_PAGE% and LAST_PAGE=%LAST_PAGE% ...
+python -m src.Runner.parallel %FIRST_PAGE% %LAST_PAGE%
 
 ENDLOCAL

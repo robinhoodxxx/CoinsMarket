@@ -8,13 +8,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
-from src.utils.CsvImp import CsvWriter
-
-TOTAL_PAGES = int(sys.argv[1]) if len(sys.argv) > 1 else 10  # default scrape pages are 10
+from src.utils.CsvImp import CsvWriter, get_page_range
 
 CHUNK_SIZE = 9
-THREADS = math.ceil(TOTAL_PAGES / CHUNK_SIZE)
-
 result_queue = Queue()
 
 
@@ -58,11 +54,12 @@ def worker(page_range):
     result_queue.put(result)
 
 
-def run_parallel_scraping():
+def run_parallel_scraping(first_page:int,last_page:int):
+    THREADS = math.ceil((last_page-first_page+1) / CHUNK_SIZE)
     # Split pages into chunks
     page_ranges = [
-        (i, min(i + CHUNK_SIZE - 1, TOTAL_PAGES))
-        for i in range(1, TOTAL_PAGES + 1, CHUNK_SIZE)
+        (i, min(i + CHUNK_SIZE - 1, last_page))
+        for i in range(first_page, last_page + 1, CHUNK_SIZE)
     ]
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=THREADS) as executor:
@@ -79,16 +76,17 @@ def run_parallel_scraping():
 # Main Execution
 if __name__ == "__main__":
 
-    if not 1 <= TOTAL_PAGES <= 98:
-        sys.exit(f"TOTAL_PAGES must be between 1 and 98. You provided: {TOTAL_PAGES}")  # Or raise an error
+    first_page, last_page = get_page_range()
 
+    if not 1 <= last_page <= 98:
+        sys.exit(f"last_page must be between 1 and 98. You provided: {last_page}")  # Or raise an error
 
     start_time = time.time()
-    print(f"Scrapping total pages :{TOTAL_PAGES}")
+    print(f"Scrapping total pages :{last_page}")
     now = datetime.now()
     formatted = now.strftime("%y%m%d-%H%M%S")
-    coins_list = run_parallel_scraping()
-    CsvWriter(f'parallel_{formatted}_{TOTAL_PAGES}', coins_list)
+    coins_list = run_parallel_scraping(first_page, last_page)
+    CsvWriter(f'parallel_{formatted}_{first_page}-{last_page}', coins_list)
     end_time = time.time()
     total_time = end_time - start_time
     print(f"Total execution time: {total_time:.2f} seconds")
