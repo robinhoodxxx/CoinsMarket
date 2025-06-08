@@ -8,15 +8,15 @@ from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
 from src.utils.CsvImp import CsvWriter, get_page_range
 
 if __name__ == '__main__':
-    
-    first_page,last_page = get_page_range()
 
-    if not 1 <= last_page <= 98:
-        sys.exit(f"last_page must be between 1 and 98. You provided: {last_page}")  # Or raise an error
+    first_page, last_page = get_page_range()
+
+    if first_page < 1 or last_page > 98:
+        sys.exit(f"first_page must be between < 1 and last_page <= 98. You provided: first_page->{first_page}&last_page->{last_page}")  # Or raise an error
 
     start_time = time.time()
 
-    print(f"Scrapping total pages :{last_page}")
+    print(f"Scrapping total pages :{last_page-first_page+1}")
 
     now = datetime.now()
     formatted = now.strftime("%y%m%d-%H%M%S")
