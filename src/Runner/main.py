@@ -13,6 +13,8 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
+    print(f"Scrapping total pages :{TOTAL_PAGES}")
+
     now = datetime.now()
     formatted = now.strftime("%y-%m-%d-%H-%M-%S")
     options = Options()
