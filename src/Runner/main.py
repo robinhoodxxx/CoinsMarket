@@ -6,6 +6,8 @@ from selenium.webdriver.chrome.options import Options
 from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
 from src.utils.CsvImp import CsvWriter
 
+TOTAL_PAGES = 98
+
 
 if __name__ == '__main__':
 
@@ -25,9 +27,8 @@ if __name__ == '__main__':
     s = ScrapeCoins_stepDef()
     coins_list = []
     try:
-        for i in range(1,5):
+        for i in range(1,TOTAL_PAGES+1):
             url = f'https://coinmarketcap.com/?page={i}'
-            print(f'Navigated to page: {url}')
             driver.get(url)
             coins_list.extend(s.ScrappingAllCoins_step(driver))
 

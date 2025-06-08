@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.options import Options
 from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
 from src.utils.CsvImp import CsvWriter
 
-TOTAL_PAGES = 98
+TOTAL_PAGES = 10
 CHUNK_SIZE = 5
 THREADS = math.ceil(TOTAL_PAGES / CHUNK_SIZE)
 
@@ -19,7 +19,7 @@ result_queue = Queue()
 def scrape_single_page(page_num):
     url = f"https://coinmarketcap.com/?page={page_num}"
     options = Options()
-    options.add_argument("--headless")  # run headless for performance
+    options.add_argument("--headless=new")  # run headless for performance
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
