@@ -10,6 +10,12 @@ class commonActions:
                 .until(EC.visibility_of_element_located((By.XPATH, locator))
                        ))
 
+
+    def waitClick(self, driver,locator: str,by=By.XPATH , timeout: int = 10) -> WebElement:
+        return (WebDriverWait(driver, timeout)
+                .until(EC.element_to_be_clickable((by, locator))
+                       ))
+
     def waitUntilPresenceAll(self, driver, locator: str, timeout: int = 10) -> None:
         (WebDriverWait(driver, timeout)
         .until(
