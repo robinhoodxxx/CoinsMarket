@@ -1,5 +1,7 @@
 @echo off
 SETLOCAL
+SET TOTAL_PAGES=%1
+IF "%TOTAL_PAGES%"=="" SET TOTAL_PAGES=10
 
 REM Check if dependencies were installed
 IF NOT EXIST "venv_done.txt" (
@@ -12,7 +14,7 @@ IF NOT EXIST "venv_done.txt" (
     echo done > venv_done.txt
 )
 
-echo Running main script with TOTAL_PAGES=%1...
-python -m src.Runner.main %1
+echo Running main script with TOTAL_PAGES=%TOTAL_PAGES% ...
+python -m src.Runner.main %TOTAL_PAGES%
 
 ENDLOCAL
