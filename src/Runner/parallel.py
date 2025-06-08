@@ -12,7 +12,7 @@ from src.utils.CsvImp import CsvWriter
 
 TOTAL_PAGES = int(sys.argv[1]) if len(sys.argv) > 1 else 10  # default scrape pages are 10
 
-CHUNK_SIZE = 5
+CHUNK_SIZE = 9
 THREADS = math.ceil(TOTAL_PAGES / CHUNK_SIZE)
 
 result_queue = Queue()
@@ -81,6 +81,7 @@ if __name__ == "__main__":
 
     if not 1 <= TOTAL_PAGES <= 98:
         sys.exit(f"TOTAL_PAGES must be between 1 and 98. You provided: {TOTAL_PAGES}")  # Or raise an error
+
 
     start_time = time.time()
     print(f"Scrapping total pages :{TOTAL_PAGES}")
