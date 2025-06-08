@@ -10,6 +10,7 @@ class ScrapeCoins_stepDef:
     def ScrappingAllCoins_step(self, driver) -> list[dict[str, str]]:
         try:
             print(f"current page:{driver.current_url}")
+            self.page.sort_by_header_name(driver)
             self.page.gradual_scroll_down(driver)
             self.page.scroll_to_element(driver)
             # l = self.page.getLastPageIndex(driver)
