@@ -78,12 +78,16 @@ def run_parallel_scraping():
 
 # Main Execution
 if __name__ == "__main__":
+
+    if not 1 < TOTAL_PAGES < 98:
+        sys.exit(f"TOTAL_PAGES must be between 1 and 98. You provided: {TOTAL_PAGES}")  # Or raise an error
+
     start_time = time.time()
     print(f"Scrapping total pages :{TOTAL_PAGES}")
     now = datetime.now()
     formatted = now.strftime("%y-%m-%d-%H-%M-%S")
     data = run_parallel_scraping()
-    CsvWriter("parallel"+formatted,data)
+    CsvWriter(f'parallel-{formatted}-{TOTAL_PAGES}',data)
     end_time = time.time()
     total_time = end_time - start_time
     print(f"Total execution time: {total_time:.2f} seconds")

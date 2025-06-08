@@ -11,10 +11,15 @@ TOTAL_PAGES = int(sys.argv[1]) if len(sys.argv) > 1 else 10  # default scrape pa
 
 if __name__ == '__main__':
 
+
+
+    if not 1 < TOTAL_PAGES < 98:
+        sys.exit(f"TOTAL_PAGES must be between 1 and 98. You provided: {TOTAL_PAGES}")  # Or raise an error
+
     start_time = time.time()
 
-
     print(f"Scrapping total pages :{TOTAL_PAGES}")
+
 
     now = datetime.now()
     formatted = now.strftime("%y-%m-%d-%H-%M-%S")
@@ -30,17 +35,16 @@ if __name__ == '__main__':
     s = ScrapeCoins_stepDef()
     coins_list = []
     try:
-        for i in range(1,TOTAL_PAGES+1):
+        for i in range(1, TOTAL_PAGES + 1):
             url = f'https://coinmarketcap.com/?page={i}'
             driver.get(url)
             coins_list.extend(s.ScrappingAllCoins_step(driver))
 
-        CsvWriter(formatted,coins_list)
+        CsvWriter(f'{formatted}-{TOTAL_PAGES}', coins_list)
 
 
     finally:
         driver.quit()
-
 
     end_time = time.time()
     total_time = end_time - start_time
