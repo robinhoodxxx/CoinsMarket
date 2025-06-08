@@ -23,9 +23,13 @@ class ThreadSafeSingletonMeta(type):
 class Home_AllCrypto_Page(commonActions, metaclass=ThreadSafeSingletonMeta):
     tableElements: str = "//table/tbody/tr"
     last_page: str = "(//ul[@class='pagination'])[last()]/li[@class='page'][last()]"
+    name_header: str = "//table//p[text()='Name']"
 
     def getLastPageIndex(self, driver) -> str:
         return self.waitFor(driver, self.last_page).text.strip()
+
+    def sort_by_header_name(self,driver):
+        self.waitFor(driver,self.name_header).click()
 
     def waitTableElementsLoaded(self, driver) -> None:
         self.waitUntilPresenceAll(driver, self.tableElements)
