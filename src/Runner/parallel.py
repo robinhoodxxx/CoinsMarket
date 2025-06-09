@@ -7,7 +7,7 @@ from src.hooks.chromeDriver import chromeDriver
 from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
 from src.utils.CsvImp import CsvWriter, get_page_range
 
-CHUNK_SIZE = 9
+CHUNK_SIZE = 5
 
 
 def scrape_pages(page_range):
