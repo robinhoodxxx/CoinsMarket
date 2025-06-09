@@ -3,29 +3,23 @@ import math
 import sys
 import time
 from datetime import datetime
-from queue import Queue
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-
+from src.hooks.chromeDriver import chromeDriver
 from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
 from src.utils.CsvImp import CsvWriter, get_page_range
 
 CHUNK_SIZE = 9
-result_queue = Queue()
 
 
-
-def scrape_pages(start_page, end_page):
+def scrape_pages(page_range):
     url_base = "https://coinmarketcap.com/?page="
-    options = Options()
-    options.add_argument("--headless=new")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-
-    driver = webdriver.Chrome(options=options)
+    start_page, end_page = page_range
     print(f"Launched headless Chrome browser for pages {start_page} to {end_page}")
-    driver.maximize_window()
+
+    ch = chromeDriver()
     s = ScrapeCoins_stepDef()
+
+
+    driver = ch.get_chrome_driver()
 
     all_coins = []
     try:
@@ -42,32 +36,27 @@ def scrape_pages(start_page, end_page):
     return all_coins
 
 
-def worker(page_range):
-    start_page, end_page = page_range
-    result = scrape_pages(start_page, end_page)
-    result_queue.put(result)
-
-
 def run_parallel_scraping(first_page: int, last_page: int):
     THREADS = math.ceil((last_page - first_page + 1) / CHUNK_SIZE)
+
     # Split pages into chunks
     page_ranges = [
         (i, min(i + CHUNK_SIZE - 1, last_page))
         for i in range(first_page, last_page + 1, CHUNK_SIZE)
     ]
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=THREADS) as executor:
-        executor.map(worker, page_ranges)
-
-    # Merge all results
     final_data = []
-    while not result_queue.empty():
-        final_data.extend(result_queue.get())
+    with concurrent.futures.ProcessPoolExecutor(max_workers=THREADS) as executor:
+        results = executor.map(scrape_pages, page_ranges)
+        for chunk in results:
+            final_data.extend(chunk)
 
     return final_data
 
 
 # Main Execution
+
+
 if __name__ == "__main__":
 
     first_page, last_page = get_page_range()

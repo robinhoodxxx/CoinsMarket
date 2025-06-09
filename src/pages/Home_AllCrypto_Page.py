@@ -4,20 +4,10 @@ import time
 from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.chrome.webdriver import WebDriver
 
+from src.hooks.chromeDriver import ThreadSafeSingletonMeta
 from src.utils.commonActions import commonActions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-
-
-class ThreadSafeSingletonMeta(type):
-    _instances = {}
-    _lock = threading.Lock()
-
-    def __call__(cls, *args, **kwargs):
-        with cls._lock:
-            if cls not in cls._instances:
-                cls._instances[cls] = super().__call__(*args, **kwargs)
-        return cls._instances[cls]
 
 
 class Home_AllCrypto_Page(commonActions, metaclass=ThreadSafeSingletonMeta):
@@ -29,7 +19,10 @@ class Home_AllCrypto_Page(commonActions, metaclass=ThreadSafeSingletonMeta):
         return self.waitFor(driver, self.last_page).text.strip()
 
     def sort_by_header_name(self, driver):
-        self.waitClick(driver, self.name_header).click()
+        try:
+            self.waitClick(driver, self.name_header).click()
+        except Exception as e:
+            print(f"Exception at sort by header click:{e}")
 
     def waitTableElementsLoaded(self, driver) -> None:
         self.waitUntilPresenceAll(driver, self.tableElements)

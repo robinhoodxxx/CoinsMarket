@@ -1,9 +1,10 @@
 from bs4 import BeautifulSoup
 
+from src.hooks.chromeDriver import ThreadSafeSingletonMeta
 from src.pages.Home_AllCrypto_Page import Home_AllCrypto_Page
 
 
-class ScrapeCoins_stepDef:
+class ScrapeCoins_stepDef(metaclass=ThreadSafeSingletonMeta):
     default: str = "na"
     page = Home_AllCrypto_Page()
 
