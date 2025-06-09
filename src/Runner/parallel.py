@@ -14,37 +14,31 @@ CHUNK_SIZE = 9
 result_queue = Queue()
 
 
-def scrape_single_page(page_num):
-    url = f"https://coinmarketcap.com/?page={page_num}"
+
+def scrape_pages(start_page, end_page):
+    url_base = "https://coinmarketcap.com/?page="
     options = Options()
-    options.add_argument("--headless=new")  # run headless for performance
+    options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
     driver = webdriver.Chrome(options=options)
-    print("launched headless chrome browser")
+    print(f"Launched headless Chrome browser for pages {start_page} to {end_page}")
     driver.maximize_window()
     s = ScrapeCoins_stepDef()
 
+    all_coins = []
     try:
-        driver.get(url)
-        # do scraping and return list of dicts
-        coins = s.ScrappingAllCoins_step(driver)
-
-        return coins
+        for page_num in range(start_page, end_page + 1):
+            try:
+                driver.get(f"{url_base}{page_num}")
+                coins = s.ScrappingAllCoins_step(driver)
+                all_coins.extend(coins)
+            except Exception as e:
+                print(f"Error scraping page {page_num}: {e}")
     finally:
         driver.quit()
 
-
-def scrape_pages(start_page, end_page):
-    all_coins = []
-
-    for page_num in range(start_page, end_page + 1):
-        try:
-            coins = scrape_single_page(page_num)  # Your method to scrape one page
-            all_coins.extend(coins)
-        except Exception as e:
-            print(f"Error scraping page {page_num}: {e}")
     return all_coins
 
 
@@ -54,15 +48,15 @@ def worker(page_range):
     result_queue.put(result)
 
 
-def run_parallel_scraping(first_page:int,last_page:int):
-    THREADS = math.ceil((last_page-first_page+1) / CHUNK_SIZE)
+def run_parallel_scraping(first_page: int, last_page: int):
+    THREADS = math.ceil((last_page - first_page + 1) / CHUNK_SIZE)
     # Split pages into chunks
     page_ranges = [
         (i, min(i + CHUNK_SIZE - 1, last_page))
         for i in range(first_page, last_page + 1, CHUNK_SIZE)
     ]
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=THREADS) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=THREADS) as executor:
         executor.map(worker, page_ranges)
 
     # Merge all results
@@ -81,12 +75,13 @@ if __name__ == "__main__":
     if first_page < 1 or last_page > 98:
         sys.exit(
             f"first_page must be between < 1 and last_page <= 98. You provided: first_page->{first_page}&last_page->{last_page}")  # Or raise an error
-    elif  last_page < first_page:
-        sys.exit(f'last_page must be greater than first_page. You provided: first_page->{first_page}&last_page->{last_page}')
+    elif last_page < first_page:
+        sys.exit(
+            f'last_page must be greater than first_page. You provided: first_page->{first_page}&last_page->{last_page}')
 
     start_time = time.time()
 
-    print(f"Scrapping total pages :{last_page - first_page+1}")
+    print(f"Scrapping total pages :{last_page - first_page + 1}")
 
     now = datetime.now()
     formatted = now.strftime("%y%m%d-%H%M%S")
