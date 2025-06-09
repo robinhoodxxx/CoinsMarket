@@ -14,11 +14,11 @@ class ThreadSafeSingletonMeta(type):
                 cls._instances[cls] = super().__call__(*args, **kwargs)
         return cls._instances[cls]
 
-class chromeDriver(metaclass=ThreadSafeSingletonMeta):
+class chromeDriver:
 
     def get_chrome_driver(self):
         options = Options()
-        options.add_argument("--headless=new")
+        options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         return webdriver.Chrome(options=options)
