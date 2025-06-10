@@ -2,12 +2,13 @@ import concurrent.futures
 import math
 import sys
 import time
+import traceback
 from datetime import datetime
 from src.hooks.chromeDriver import chromeDriver
 from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
 from src.utils.CsvImp import CsvWriter, get_page_range
 
-CHUNK_SIZE = 12
+CHUNK_SIZE = 20
 
 
 def scrape_pages(page_range):
@@ -15,12 +16,13 @@ def scrape_pages(page_range):
     start_page, end_page = page_range
     print(f"Launched headless Chrome browser for pages {start_page} to {end_page}")
 
+    all_coins = []
+    failed_pages = []
+
     ch = chromeDriver()
     s = ScrapeCoins_stepDef()
     driver = ch.get_chrome_driver()
 
-    all_coins = []
-    failed_pages = []
     try:
         for page_num in range(start_page, end_page + 1):
             try:
@@ -30,11 +32,24 @@ def scrape_pages(page_range):
                 all_coins.extend(coins)
             except Exception as e:
                 print(f"Error scraping page {page_num}: {e}")
+                traceback.print_exc()
                 failed_pages.append(page_num)
+                # Reset the driver and scraper for next attempt
+                try:
+                    ch.quit_driver()
+                except:
+                    pass
+                ch = chromeDriver()
+                s = ScrapeCoins_stepDef()
+                driver = ch.get_chrome_driver()
     finally:
-        driver.quit()
+        try:
+            ch.quit_driver()
+        except:
+            pass
 
     return all_coins, failed_pages
+
 
 
 def run_parallel_scraping(first_page: int, last_page: int):
@@ -74,7 +89,7 @@ def run_parallel_scraping(first_page: int, last_page: int):
             except Exception as e:
                 print(f"Retry failed for page {page_num}: {e}")
             finally:
-                driver.quit()
+                ch.quit_driver()
 
     return final_data
 

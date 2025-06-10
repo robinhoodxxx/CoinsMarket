@@ -4,6 +4,7 @@ from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
+from src.hooks.chromeDriver import chromeDriver
 from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
 from src.utils.CsvImp import CsvWriter, get_page_range
 
@@ -21,14 +22,10 @@ if __name__ == '__main__':
 
     print(f"Scrapping total pages :{last_page - first_page + 1}")
 
+    ch =chromeDriver()
     now = datetime.now()
     formatted = now.strftime("%y%m%d-%H%M%S")
-    options = Options()
-    options.add_argument("--headless")  # run headless for performance
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-
-    driver = webdriver.Chrome(options=options)
+    driver = ch.get_chrome_driver()
     print("launched headless chrome browser")
     driver.maximize_window()
 
@@ -44,7 +41,7 @@ if __name__ == '__main__':
 
 
     finally:
-        driver.quit()
+        ch.quit_driver()
 
     end_time = time.time()
     total_time = end_time - start_time
