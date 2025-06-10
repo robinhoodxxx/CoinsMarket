@@ -35,7 +35,7 @@ CoinsMarket/
 📦 Setup
 
 - git clone https://github.com/yourusername/CoinMarketCap-Scraper.git
-- cd CoinMarketCap-Scraper
+- cd CoinsMarket
 - pip install -r req.txt
 
 Run on Windows we have two bat files:
