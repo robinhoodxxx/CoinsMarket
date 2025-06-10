@@ -74,7 +74,7 @@ def run_parallel_scraping(first_page: int, last_page: int):
 
         # Log to file
         with open("failed_pages.log", "w") as f:
-            f.write("\n".join(map(str, all_failed_pages)))
+            f.write(str(all_failed_pages))  # Writes like [1, 2, 3]
 
         ch = chromeDriver()
         driver = ch.get_chrome_driver()
