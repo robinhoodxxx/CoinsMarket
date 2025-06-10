@@ -9,18 +9,14 @@ class ScrapeCoins_stepDef(metaclass=ThreadSafeSingletonMeta):
     page = Home_AllCrypto_Page()
 
     def ScrappingAllCoins_step(self, driver) -> list[dict[str, str]]:
-        try:
-            print(f"current page:{driver.current_url}")
-            self.page.sort_by_header_name(driver)
-            self.page.gradual_scroll_down(driver)
-            self.page.scroll_to_element(driver)
-            # l = self.page.getLastPageIndex(driver)
-            self.page.wait_for_full_table(driver)
-            html = driver.page_source
-            return self.Scraper(html)
-        except Exception as e:
-            print(f'Got exception in scrapping all coins:{e}')
-            return []
+        print(f"current page:{driver.current_url}")
+        self.page.sort_by_header_name(driver)
+        self.page.gradual_scroll_down(driver)
+        self.page.scroll_to_element(driver)
+        # l = self.page.getLastPageIndex(driver)
+        self.page.wait_for_full_table(driver)
+        html = driver.page_source
+        return self.Scraper(html)
 
     def Scraper(self, html) -> list[dict[str, str]]:
         doc = BeautifulSoup(html, "html.parser")
@@ -29,19 +25,15 @@ class ScrapeCoins_stepDef(metaclass=ThreadSafeSingletonMeta):
         print(len(trs))
         return self.Scrape_all_coins(trs)
 
-
     def Scrape_all_coins(self, trs) -> list[dict[str, str]]:
-        def safe_get_text(elem)->str:
+        def safe_get_text(elem) -> str:
             return elem.text.strip() if elem else self.default
 
-        def is_coin_down(elem)->str:
+        def is_coin_down(elem) -> str:
             if elem.find('span', class_="icon-Caret-down"):
                 return "-"
             else:
                 return ""
-
-
-
 
         coins_list = []
 
@@ -69,9 +61,9 @@ class ScrapeCoins_stepDef(metaclass=ThreadSafeSingletonMeta):
                 coin_symbol = coin_name_tag[1].get_text(strip=True) if len(coin_name_tag) > 1 else self.default
 
                 coin_price = safe_get_text(price_td.find('span'))
-                coin_1hr = is_coin_down(hr_1_td)+safe_get_text(hr_1_td.find('span'))
-                coin_1day = is_coin_down(day_1_td)+safe_get_text(day_1_td.find('span'))
-                coin_7day = is_coin_down(day_7_td)+safe_get_text(day_7_td.find('span'))
+                coin_1hr = is_coin_down(hr_1_td) + safe_get_text(hr_1_td.find('span'))
+                coin_1day = is_coin_down(day_1_td) + safe_get_text(day_1_td.find('span'))
+                coin_7day = is_coin_down(day_7_td) + safe_get_text(day_7_td.find('span'))
 
                 coin_mcap = safe_get_text(mcap_td.find('span'))
 
