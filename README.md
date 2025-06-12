@@ -34,7 +34,7 @@ CoinsMarket/
 
 📦 Setup
 
-- git clone https://github.com/yourusername/CoinMarketCap-Scraper.git
+- git clone https://github.com/robinhoodxxx/CoinsMarket.git
 - cd CoinsMarket
 - pip install -r req.txt
 
