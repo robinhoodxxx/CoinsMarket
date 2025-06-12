@@ -12,8 +12,10 @@ class ScrapeCoins_stepDef(metaclass=ThreadSafeSingletonMeta):
         print(f"current page:{driver.current_url}")
         self.page.sort_by_header_name(driver)
         self.page.gradual_scroll_down(driver)
-        self.page.scroll_to_element(driver)
-        # l = self.page.getLastPageIndex(driver)
+        try:
+          self.page.scroll_to_element(driver)
+        except Exception as e:
+            print(f'scroll to the element failed {e}')
         self.page.wait_for_full_table(driver)
         html = driver.page_source
         return self.Scraper(html)

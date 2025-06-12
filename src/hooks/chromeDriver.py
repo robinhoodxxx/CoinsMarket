@@ -27,6 +27,12 @@ class chromeDriver:
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--window-size=1920,1080")
+            options.add_argument('--disable-3d-apis')
+            options.add_argument('--disable-software-rasterizer')  # Prevents software fallback
+            options.add_argument('--enable-unsafe-swiftshader')  # Use with caution, bypasses warnings
+            options.add_argument('--log-level=3')    # Suppresses most console logging (ERROR level)
+            options.add_argument('--ignore-certificate-errors')  # Ignores bad SSL certs
+
             self.driver = webdriver.Chrome(
                 options=options
             )
