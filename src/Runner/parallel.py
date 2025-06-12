@@ -68,13 +68,15 @@ def run_parallel_scraping(first_page: int, last_page: int):
             final_data.extend(coins)
             all_failed_pages.extend(failed)
 
+    with open("failed_pages.log", "w") as f:
+       if all_failed_pages:
+          f.write(str(all_failed_pages))  # Writes like [1, 2, 3]
+       else:
+           f.write("No pages failed")  # Writes like [1, 2, 3]
+
     # Retry failed pages one by one
     if all_failed_pages:
         print(f"\nRetrying failed pages: {all_failed_pages}\n")
-
-        # Log to file
-        with open("failed_pages.log", "w") as f:
-            f.write(str(all_failed_pages))  # Writes like [1, 2, 3]
 
         ch = chromeDriver()
         driver = ch.get_chrome_driver()
