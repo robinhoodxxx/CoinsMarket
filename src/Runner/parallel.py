@@ -8,7 +8,7 @@ from src.hooks.chromeDriver import chromeDriver
 from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
 from src.utils.CsvImp import CsvWriter, get_page_range
 
-CHUNK_SIZE = 20
+THREADS = 4
 
 
 def scrape_pages(page_range):
@@ -53,7 +53,7 @@ def scrape_pages(page_range):
 
 
 def run_parallel_scraping(first_page: int, last_page: int):
-    THREADS = math.ceil((last_page - first_page + 1) / CHUNK_SIZE)
+    CHUNK_SIZE = math.ceil((last_page - first_page + 1) / THREADS)
     page_ranges = [
         (i, min(i + CHUNK_SIZE - 1, last_page))
         for i in range(first_page, last_page + 1, CHUNK_SIZE)
