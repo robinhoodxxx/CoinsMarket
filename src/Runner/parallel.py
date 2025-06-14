@@ -8,7 +8,7 @@ from src.hooks.chromeDriver import chromeDriver
 from src.steps.ScrapeCoins_stepDef import ScrapeCoins_stepDef
 from src.utils.CsvImp import CsvWriter, get_page_range
 
-THREADS = 4
+THREADS = 5
 
 
 def scrape_pages(page_range):
@@ -72,7 +72,7 @@ def run_parallel_scraping(first_page: int, last_page: int):
        if all_failed_pages:
           f.write(str(all_failed_pages))  # Writes like [1, 2, 3]
        else:
-           f.write("No pages failed")  # Writes like [1, 2, 3]
+           f.write("No pages failed")
 
     # Retry failed pages one by one
     if all_failed_pages:
@@ -107,10 +107,10 @@ if __name__ == "__main__":
 
     start_time = time.time()
     print(f"Scrapping total pages :{last_page - first_page + 1}")
+    coins_list = run_parallel_scraping(first_page, last_page)
 
     now = datetime.now()
     formatted = now.strftime("%y%m%d-%H%M%S")
-    coins_list = run_parallel_scraping(first_page, last_page)
 
     CsvWriter(f'parallel_{formatted}_{first_page}-{last_page}', coins_list)
 
