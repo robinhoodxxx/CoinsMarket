@@ -40,8 +40,8 @@ CoinsMarket/
 
 Run on Windows we have two bat files:
  1. run.bat (series run like scrape page one after one)
- 2. runParallel.bat (parallel execution based on chuck size 
-   i.e no of pages you wanna scrape at a single time eg: chunk size is 5 then total pages is 50 you launched 50/5 ->10 browser parallel and scrape 5 pages in each browser)
+ 2. runParallel.bat (parallel execution based on Threads 
+   i.e no of pages you wanna scrape at a single time eg: Threads is 5 then total pages is 50 you launched 5 browser parallel and scrape 50/5->10 pages in each browser)
 
 
 🧪 How to Run man classes in cmd
