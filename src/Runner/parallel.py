@@ -43,10 +43,7 @@ def scrape_pages(page_range):
                 s = ScrapeCoins_stepDef()
                 driver = ch.get_chrome_driver()
     finally:
-        try:
-            ch.quit_driver()
-        except:
-            pass
+        ch.quit_driver()
 
     return all_coins, failed_pages
 
