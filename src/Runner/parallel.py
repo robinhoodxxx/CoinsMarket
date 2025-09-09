@@ -48,7 +48,6 @@ def scrape_pages(page_range):
     return all_coins, failed_pages
 
 
-
 def run_parallel_scraping(first_page: int, last_page: int):
     CHUNK_SIZE = math.ceil((last_page - first_page + 1) / THREADS)
     page_ranges = [
@@ -66,10 +65,10 @@ def run_parallel_scraping(first_page: int, last_page: int):
             all_failed_pages.extend(failed)
 
     with open("failed_pages.log", "w") as f:
-       if all_failed_pages:
-          f.write(str(all_failed_pages))  # Writes like [1, 2, 3]
-       else:
-           f.write("No pages failed")
+        if all_failed_pages:
+            f.write(str(all_failed_pages))  # Writes like [1, 2, 3]
+        else:
+            f.write("No pages failed")
 
     # Retry failed pages one by one
     if all_failed_pages:
@@ -98,9 +97,11 @@ if __name__ == "__main__":
     first_page, last_page = get_page_range()
 
     if first_page < 1 or last_page > 98:
-        sys.exit(f"first_page must be between < 1 and last_page <= 98. You provided: first_page->{first_page}&last_page->{last_page}")
+        sys.exit(
+            f"first_page must be between < 1 and last_page <= 98. You provided: first_page->{first_page}&last_page->{last_page}")
     elif last_page < first_page:
-        sys.exit(f'last_page must be greater than first_page. You provided: first_page->{first_page}&last_page->{last_page}')
+        sys.exit(
+            f'last_page must be greater than first_page. You provided: first_page->{first_page}&last_page->{last_page}')
 
     start_time = time.time()
     print(f"Scrapping total pages :{last_page - first_page + 1}")
